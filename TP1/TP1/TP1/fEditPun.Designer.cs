@@ -111,7 +111,7 @@
             // 
             this.cbTemps.FormattingEnabled = true;
             this.cbTemps.Items.AddRange(new object[] {
-            "2",
+            "1",
             "4",
             "5",
             "10"});

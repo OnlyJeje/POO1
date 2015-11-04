@@ -46,47 +46,62 @@ namespace TP1
             punitionsLocal = new List<Punition>();
             punitionVisiteur = new List<Punition>();
         }
+        private void cleanPun()
+        {
+            punitionsLocal.Clear();
+            punitionVisiteur.Clear();
+            for (int i = 0; i < 3; i++)
+            {
+                lPunTimeLocal[i].Text = "00 00:00";
+                lPunTimeVisiteur[i].Text = "00 00:00";
+            }
+         }
+        private void display()
+        {
+            int i = 0;
 
+            while (i < 3 && i < punitionsLocal.Count())
+            {
+                if (punitionsLocal.ElementAt(i).enCours == true)
+                    lPunTimeLocal[i].Text = punitionsLocal.ElementAt(i).no + ' ' + TempsFormate(punitionsLocal.ElementAt(i).temps);
+                else
+                    lPunTimeLocal[i].Text = "00 00:00";
+                i++;
+            }
+            if (punitionsLocal.Count() == 2)
+                lPunTimeLocal[2].Text = "00 00:00";
+            if (punitionsLocal.Count() == 1)
+            {
+                lPunTimeLocal[1].Text = "00 00:00";
+                lPunTimeLocal[2].Text = "00 00:00";
+            }
+            i = 0;
+            while (i < 3 && i < punitionVisiteur.Count())
+            {
+                if (punitionVisiteur.ElementAt(i).enCours == true)
+                    lPunTimeVisiteur[i].Text = punitionVisiteur.ElementAt(i).no + ' ' + TempsFormate(punitionVisiteur.ElementAt(i).temps);
+                else
+                    lPunTimeVisiteur[i].Text = "00 00:00";
+                i++;
+            }
+            if (punitionVisiteur.Count() == 2)
+                lPunTimeVisiteur[2].Text = "00 00:00";
+            if (punitionVisiteur.Count() == 1)
+            {
+                lPunTimeVisiteur[1].Text = "00 00:00";
+                lPunTimeVisiteur[2].Text = "00 00:00";
+            }
+        }
         private void handlePunition()
         {
-            int i;
-            Punition elem;
-
-            i = 0;
-            while (i < punitionsLocal.Count() && i < 3)
-            {
-                elem = punitionsLocal.ElementAt(i);
-                if (elem.enCours == true)
-                {
-                    if (elem.temps == 0)
-                    {
-                        lPunTimeLocal[i].Text = "00 00:00";
-                        punitionsLocal.RemoveAt(i);
-                        startPunition();
-                    }
-                    else
-                        lPunTimeLocal[i].Text = elem.no + ' ' + TempsFormate(elem.temps--);
-                }
-                i++;
-            }
-            i = 0;
-            while (i < punitionVisiteur.Count() && i < 3)
-            {
-                elem = punitionVisiteur.ElementAt(i);
-                if (elem.enCours == true)
-                {
-                    if (elem.temps == 0)
-                    {
-                        lPunTimeVisiteur[i].Text = "00 00:00";
-                        punitionVisiteur.RemoveAt(i);
-                        startPunition();
-                    }
-                    else
-                        lPunTimeVisiteur[i].Text = elem.no + ' ' + TempsFormate(elem.temps--);
-                }
-                i++;
-            }
-
+            foreach(Punition punition in punitionsLocal)
+                punition.Dec();
+            foreach (Punition punition in punitionVisiteur)
+                punition.Dec();
+            punitionsLocal.RemoveAll(c => c.temps == 0);
+            punitionVisiteur.RemoveAll(c => c.temps == 0);
+            startPunition();
+            display();
         }
 
         /// <summary>
@@ -98,8 +113,17 @@ namespace TP1
                 timer.Stop();
             if (punitionsLocal.Count() > 0 || punitionVisiteur.Count() > 0)
             {
-                Console.WriteLine("pun local/visit exist");
                 handlePunition();
+            }
+            else
+            {
+                lPunTimeLocal[0].Text = "00 00:00";
+                lPunTimeLocal[1].Text = "00 00:00";
+                lPunTimeLocal[2].Text = "00 00:00";
+                lPunTimeVisiteur[0].Text = "00 00:00";
+                lPunTimeVisiteur[1].Text = "00 00:00";
+                lPunTimeVisiteur[2].Text = "00 00:00";
+
             }
             lHorloge.Text = TempsFormate(compteur--);
             
@@ -114,10 +138,16 @@ namespace TP1
             // nud fait référence au pavé numérique qui a changé de valeur
             NumericUpDown nud = sender as NumericUpDown;
             if (nud == nudLocal)
+            {
                 lScoreLocal.Text = nudLocal.Value.ToString();
+                cleanPun();
+            }
             else if (nud == nudVisiteur)
+            {
                 lScoreVisiteur.Text = nudVisiteur.Value.ToString();
-                timer.Stop();
+                cleanPun();
+            }
+            timer.Stop();
         }
 
         /// <summary>
@@ -155,9 +185,9 @@ namespace TP1
             i = 0;
             while (i < punitionsLocal.Count() && i < 3)
             {
-                Console.WriteLine("While du start punition: local");
                 elem = punitionsLocal.ElementAt(i);
-                elem.Start();
+                if (elem.enCours != true)
+                  elem.Start();
                 i++;
             }
             i = 0;
@@ -165,7 +195,8 @@ namespace TP1
             {
                 Console.WriteLine("While du start puniton: visiteurs");
                 elem = punitionVisiteur.ElementAt(i);
-                elem.Start();
+                if (elem.enCours != true)
+                  elem.Start();
                 i++;
             }
         }
@@ -179,10 +210,7 @@ namespace TP1
             //    compteur = 1200;
             timer.Start();
             if (punitionsLocal.Count() > 0 || punitionVisiteur.Count() > 0)
-            {
-                Console.WriteLine("Start punition");
-                startPunition();
-            }
+              startPunition();
         }
 
         /// <summary>
@@ -230,6 +258,7 @@ namespace TP1
                 timer.Stop();
                 compteur = 1200;
                 lPeriode.Text = nudPeriode.Value.ToString();
+                cleanPun();
             }
                 
         }
