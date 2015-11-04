@@ -132,6 +132,7 @@
             this.label2.Size = new System.Drawing.Size(330, 85);
             this.label2.TabIndex = 0;
             this.label2.Text = "00 00:00";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // panel1
             // 

@@ -17,3 +17,13 @@ C:\Users\onlyj_000\Desktop\TP1\TP1\TP1\obj\Debug\TP1.fEditPun.resources
 C:\Users\onlyj_000\Desktop\TP1\TP1\TP1\obj\Debug\TP1.Form1.resources
 C:\Users\onlyj_000\Desktop\TP1\TP1\TP1\obj\Debug\TP1.Properties.Resources.resources
 C:\Users\onlyj_000\Desktop\TP1\TP1\TP1\obj\Debug\TP1.csproj.GenerateResource.Cache
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\bin\Debug\TP1.exe.config
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\obj\Debug\TP1.exe
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\obj\Debug\TP1.pdb
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\bin\Debug\TP1.exe
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\bin\Debug\TP1.pdb
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\obj\Debug\TP1.csprojResolveAssemblyReference.cache
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\obj\Debug\TP1.fEditPun.resources
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\obj\Debug\TP1.Form1.resources
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\obj\Debug\TP1.Properties.Resources.resources
+C:\Users\Krates\Documents\GitHub\POO1\TP1\TP1\TP1\obj\Debug\TP1.csproj.GenerateResource.Cache

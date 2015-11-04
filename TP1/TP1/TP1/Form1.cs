@@ -18,8 +18,6 @@ namespace TP1
         List<Punition> punitionVisiteur;
 
         int compteur = 1200;
-        int scoreLocal = 0;
-        int scoreVisiteur = 0;
         public Form1()
         {
             InitializeComponent();
@@ -49,15 +47,63 @@ namespace TP1
             punitionVisiteur = new List<Punition>();
         }
 
+        private void handlePunition()
+        {
+            int i;
+            Punition elem;
+
+            i = 0;
+            while (i < punitionsLocal.Count() && i < 3)
+            {
+                elem = punitionsLocal.ElementAt(i);
+                if (elem.enCours == true)
+                {
+                    if (elem.temps == 0)
+                    {
+                        lPunTimeLocal[i].Text = "00 00:00";
+                        punitionsLocal.RemoveAt(i);
+                        startPunition();
+                    }
+                    else
+                        lPunTimeLocal[i].Text = elem.no + ' ' + TempsFormate(elem.temps--);
+                }
+                i++;
+            }
+            i = 0;
+            while (i < punitionVisiteur.Count() && i < 3)
+            {
+                elem = punitionVisiteur.ElementAt(i);
+                if (elem.enCours == true)
+                {
+                    if (elem.temps == 0)
+                    {
+                        lPunTimeVisiteur[i].Text = "00 00:00";
+                        punitionVisiteur.RemoveAt(i);
+                        startPunition();
+                    }
+                    else
+                        lPunTimeVisiteur[i].Text = elem.no + ' ' + TempsFormate(elem.temps--);
+                }
+                i++;
+            }
+
+        }
+
         /// <summary>
         /// Cette méthode est appelée par le TIMER à chaque seconde
         /// </summary>
         private void timer_Tick(object sender, EventArgs e)
         {
-            
-            lHorloge.Text = TempsFormate(compteur--);
             if (compteur <= 0)
                 timer.Stop();
+            if (punitionsLocal.Count() > 0 || punitionVisiteur.Count() > 0)
+            {
+                Console.WriteLine("pun local/visit exist");
+                handlePunition();
+            }
+            lHorloge.Text = TempsFormate(compteur--);
+            
+                
         }
 
         /// <summary>
@@ -68,9 +114,9 @@ namespace TP1
             // nud fait référence au pavé numérique qui a changé de valeur
             NumericUpDown nud = sender as NumericUpDown;
             if (nud == nudLocal)
-                lScoreLocal.Text = (++scoreLocal).ToString();
+                lScoreLocal.Text = nudLocal.Value.ToString();
             else if (nud == nudVisiteur)
-                lScoreVisiteur.Text = (++scoreVisiteur).ToString();
+                lScoreVisiteur.Text = nudVisiteur.Value.ToString();
                 timer.Stop();
         }
 
@@ -81,6 +127,7 @@ namespace TP1
         private void bPun_Click(object sender, EventArgs e)
         {
             Button b = sender as Button; // b référencie le bouton cliqué
+            timer.Stop();
 
             fEditPun f = new fEditPun();
             if (b == bPunLocal)
@@ -100,12 +147,42 @@ namespace TP1
 
         }
 
+        public void startPunition()
+        {
+            int i;
+            Punition elem;
+
+            i = 0;
+            while (i < punitionsLocal.Count() && i < 3)
+            {
+                Console.WriteLine("While du start punition: local");
+                elem = punitionsLocal.ElementAt(i);
+                elem.Start();
+                i++;
+            }
+            i = 0;
+            while (i < punitionVisiteur.Count() && i < 3)
+            {
+                Console.WriteLine("While du start puniton: visiteurs");
+                elem = punitionVisiteur.ElementAt(i);
+                elem.Start();
+                i++;
+            }
+        }
+
         /// <summary>
         /// Méthode associée au bouton START
         /// </summary>
         private void bStart_Click(object sender, EventArgs e)
         {
+            //if (compteur <= 0)
+            //    compteur = 1200;
             timer.Start();
+            if (punitionsLocal.Count() > 0 || punitionVisiteur.Count() > 0)
+            {
+                Console.WriteLine("Start punition");
+                startPunition();
+            }
         }
 
         /// <summary>
@@ -149,8 +226,7 @@ namespace TP1
         /// </summary>
         private void nudPeriode_ValueChanged(object sender, EventArgs e)
         {
-            if (compteur == 0) {
-                
+            if (compteur == 0) {               
                 timer.Stop();
                 compteur = 1200;
                 lPeriode.Text = nudPeriode.Value.ToString();
@@ -163,6 +239,11 @@ namespace TP1
         }
 
         private void lScoreVisiteur_Click(object sender, EventArgs e) {
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
