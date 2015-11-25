@@ -47,6 +47,7 @@ namespace TP2_POO {
             {
                 this.inventory[value]--;               
                 solde -= this.price[value];
+                this.WriteBinaryFile("data.bin", inventory);
             }
             else
             {
@@ -58,7 +59,6 @@ namespace TP2_POO {
                     this.Display("Item", "Indisponible");
                 }
             }
-            this.WriteBinaryFile("data.bin", inventory);
         }
 
         /* Ajoute le montant à solde */
