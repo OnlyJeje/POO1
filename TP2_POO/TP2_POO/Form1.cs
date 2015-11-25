@@ -15,7 +15,7 @@ namespace TP2_POO {
         string cmd = "";
         double solde = 0.00d;
         double[] inventory = new double[14];
-        double[] price = new double[14];
+        double[] price = new double[14]{1,2,3,4,5,6,7,8,9,10,1.5,2.5,0.5,4.5};
         string[] name = new string[14];
         bool display = true;
         int iDisplay = 0;
@@ -43,9 +43,9 @@ namespace TP2_POO {
         public void BuyProduct(string cmd) {
             string hex = cmd[1].ToString();
             int value = Convert.ToInt32(hex, 16);
-            if (this.inventory[value] > 0 && (solde - this.price[value]) <= 0)
+            if (this.inventory[value] > 0 && (solde - this.price[value]) >= 0)
             {
-                this.inventory[value]--;
+                this.inventory[value]--;               
                 solde -= this.price[value];
             }
             else
@@ -53,6 +53,9 @@ namespace TP2_POO {
                 if ((solde - this.price[value]) <= 0)
                 {
                     this.Display("Solde", "Insuffisant");
+                }
+                else if (this.inventory[value] <= 0) {
+                    this.Display("Item", "Indisponible");
                 }
             }
             this.WriteBinaryFile("data.bin", inventory);
@@ -105,6 +108,8 @@ namespace TP2_POO {
                         Display("Pièce", "rejeté"); 
                         timer1.Start();
                     }
+                    break;
+                default:
                     break;
             }
         }
@@ -241,6 +246,11 @@ namespace TP2_POO {
                 display = true;
                 iDisplay++;
             }
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e) {
+            cmd = "";
+            Display("Commande", "Annulée");
         }
     }
 }
