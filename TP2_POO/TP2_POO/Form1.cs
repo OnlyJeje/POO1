@@ -37,9 +37,24 @@ namespace TP2_POO {
                 return true;
                     
         }
-
+        /*Converti le code d'objet en entier, vérifie que le solde est suffisant ainsi qu'il y a assez d'unité
+         de l'objet désiré. Si toutes les conditions sont validé le solde est diminué du prix et le nombre d'unité est décrémenté.
+         Sinon un message d'erreur est affiché.*/
         public void BuyProduct(string cmd) {
-
+            string hex = cmd[1].ToString();
+            int value = Convert.ToInt32(hex, 16);
+            if (this.inventory[value] > 0 && (solde - this.price[value]) <= 0)
+            {
+                this.inventory[value]--;
+                solde -= this.price[value];
+            }
+            else
+            {
+                if ((solde - this.price[value]) <= 0)
+                {
+                    this.Display("Solde", "Insuffisant");
+                }
+            }
         }
 
         /* Ajoute le montant à solde */
@@ -93,8 +108,12 @@ namespace TP2_POO {
             }
         }
 
+        /*Cette fonction converti le code du produit en entier puis incrémente le 
+          nombre d'objet correspondant à ce code*/
         public void AddItem(string cmd) {
-
+            string hex = cmd[1].ToString();
+            int value = Convert.ToInt32(hex, 16);
+            this.inventory[value]++;
         }
 
         public void GiveMoney(string cmd) {
