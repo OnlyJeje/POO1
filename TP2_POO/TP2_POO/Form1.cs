@@ -39,7 +39,7 @@ namespace TP2_POO {
         }
         /*Converti le code d'objet en entier, vérifie que le solde est suffisant ainsi qu'il y a assez d'unité
          de l'objet désiré. Si toutes les conditions sont validé le solde est diminué du prix et le nombre d'unité est décrémenté.
-         Sinon un message d'erreur est affiché.*/
+         Sinon un message d'erreur est affiché puis mets à jour le fichier data*/
         public void BuyProduct(string cmd) {
             string hex = cmd[1].ToString();
             int value = Convert.ToInt32(hex, 16);
@@ -55,6 +55,7 @@ namespace TP2_POO {
                     this.Display("Solde", "Insuffisant");
                 }
             }
+            this.WriteBinaryFile("data.bin", inventory);
         }
 
         /* Ajoute le montant à solde */
@@ -109,11 +110,12 @@ namespace TP2_POO {
         }
 
         /*Cette fonction converti le code du produit en entier puis incrémente le 
-          nombre d'objet correspondant à ce code*/
+          nombre d'objet correspondant à ce code puis mets à jour le fichier data*/
         public void AddItem(string cmd) {
             string hex = cmd[1].ToString();
             int value = Convert.ToInt32(hex, 16);
             this.inventory[value]++;
+            this.WriteBinaryFile("data.bin", inventory);
         }
 
         public void GiveMoney(string cmd) {
