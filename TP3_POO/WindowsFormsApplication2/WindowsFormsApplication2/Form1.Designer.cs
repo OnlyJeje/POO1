@@ -34,7 +34,7 @@
             // 
             // LoadFile
             // 
-            this.LoadFile.Location = new System.Drawing.Point(201, 250);
+            this.LoadFile.Location = new System.Drawing.Point(452, 595);
             this.LoadFile.Name = "LoadFile";
             this.LoadFile.Size = new System.Drawing.Size(75, 23);
             this.LoadFile.TabIndex = 0;
@@ -46,14 +46,14 @@
             // 
             this.panel.Location = new System.Drawing.Point(13, 13);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(491, 231);
+            this.panel.Size = new System.Drawing.Size(963, 576);
             this.panel.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(516, 285);
+            this.ClientSize = new System.Drawing.Size(979, 630);
             this.Controls.Add(this.panel);
             this.Controls.Add(this.LoadFile);
             this.Name = "Form1";
