@@ -3,36 +3,29 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZedGraph;
 
-namespace WindowsFormsApplication2
-{
-    public partial class Form1 : Form
-    {
+namespace WindowsFormsApplication2 {
+    public partial class Form1 : Form {
         ZedGraphControl graph;
         GraphPane pane;
-        //Rajout malprpore de panel afin d'andiguer une erreur.
-        private System.Windows.Forms.Panel panel;
 
-        public Form1()
-        {
+        List<double> coordX = new List<double>();
+        List<double> coordY = new List<double>();
+        double[] x = null;
+        double[] y = null;
+
+        public Form1() {
             InitializeComponent();
         }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-/*Une sensation de déjà vu? C'est ton code pour load les exe mais pour chopper un bin là*/
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+        private void Form1_Load(object sender, EventArgs e) {
 
-            openFileDialog.Filter = "BinFile (.bin) | *.bin";
-            openFileDialog.FilterIndex = 1;
-            openFileDialog.ShowDialog();
-            /*Pour l'instant on ne fait rien du fichier choisi*/
-
-/*Le code de base repris du prof pour l'initialisation du tableau*/
+            /*Le code de base repris du prof pour l'initialisation du tableau*/
             graph = new ZedGraphControl();      // Créer la composante graphique
             graph.Parent = panel;               // Placer la composante sur le panel de la fiche
 
@@ -48,11 +41,10 @@ namespace WindowsFormsApplication2
             pane.Title.Text = "Le titre du graphique";
             // Mettre une petite couleur de fond pour faire joli
             pane.Chart.Fill = new Fill(Color.White, Color.LightBlue, 45.0f);
-            do_work();
+            //do_work();
         }
 
-        private void do_work()
-        {
+        private void do_work() {
             /*Ici devrait être une fonction créant une liste à partir du fichier */
 
             // On insère les valeurs sur notre graphique ==> créer une "courbe".
@@ -61,8 +53,11 @@ namespace WindowsFormsApplication2
              * Il faudra simplement le réutiliser avec nos points (ceux résultant de la médiation
              entre les coordonnées, la ligne du millieu sur le schèma) et ps: les couleurs ne sont pas
              * bonnes entre le commentaire et le code ;)*/
-/*            LineItem courbe = pane.AddCurve("Sinus", point, Color.Green, SymbolType.Triangle);
-            courbe.Symbol.Fill = new Fill(Color.Red);*/
+            /*            LineItem courbe = pane.AddCurve("Sinus", point, Color.Green, SymbolType.Triangle);
+                        courbe.Symbol.Fill = new Fill(Color.Red);*/
+
+            LineItem courbe = pane.AddCurve("Sinus", x, y, Color.Red);
+                courbe.Symbol.Fill = new Fill(Color.Red);
 
             // On ajuste les axes en fonctions des étendues de X et Y
             /*Mettre notre échelle*/
@@ -84,8 +79,7 @@ namespace WindowsFormsApplication2
             graph.Invalidate();             // Pour redessiner le graphique
         }
 
-        private void MagicTools()
-        {
+        private void MagicTools() {
             /*Ici je mets les bouts de code utiles avec le pourquoi*/
 
             /*Ton readBinaryFile du TP2 afin de lire les données du fichier*/
@@ -104,6 +98,37 @@ namespace WindowsFormsApplication2
                 }
             }*/
 
+        }
+
+        private void LoadFile_Click(object sender, EventArgs e) {
+            
+               
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "TP3File (.TP3) | *.TP3";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.ShowDialog();
+
+            coordX.Clear();
+            coordY.Clear();
+            using (BinaryReader b = new BinaryReader(File.Open(openFileDialog.FileName, FileMode.Open))) {
+                int pos = 0;
+                int length = (int)b.BaseStream.Length;
+                while (pos < length) {
+                    
+                    double v = b.ReadDouble();
+                    if (coordX.Count() != coordY.Count())
+                        coordY.Add(v);
+                    else
+                        coordX.Add(v);
+                    pos = pos + sizeof(double);
+                }
+
+            }
+            x = coordX.ToArray();
+            y = coordY.ToArray();
+            do_work();
         }
     }
 }
