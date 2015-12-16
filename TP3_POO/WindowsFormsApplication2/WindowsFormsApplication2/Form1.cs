@@ -19,6 +19,17 @@ namespace WindowsFormsApplication2 {
         List<double> coordY = new List<double>();
         double[] x = null;
         double[] y = null;
+        double[] ymodif = null;
+
+        double sumX;
+        double sumY;
+        
+        double sumSquareX;
+        double sumXY;
+
+        double A;
+        double B;
+        double R;
 
         public Form1() {
             InitializeComponent();
@@ -39,9 +50,9 @@ namespace WindowsFormsApplication2 {
             pane.XAxis.Title.Text = "Abcisse (X)";  // Identifier les axes
             pane.YAxis.Title.Text = "Ordonnée (Y)";
             pane.Title.Text = "Le titre du graphique";
+
             // Mettre une petite couleur de fond pour faire joli
             pane.Chart.Fill = new Fill(Color.White, Color.LightBlue, 45.0f);
-            //do_work();
         }
 
         private void do_work() {
@@ -53,24 +64,27 @@ namespace WindowsFormsApplication2 {
              * Il faudra simplement le réutiliser avec nos points (ceux résultant de la médiation
              entre les coordonnées, la ligne du millieu sur le schèma) et ps: les couleurs ne sont pas
              * bonnes entre le commentaire et le code ;)*/
-            /*            LineItem courbe = pane.AddCurve("Sinus", point, Color.Green, SymbolType.Triangle);
-                        courbe.Symbol.Fill = new Fill(Color.Red);*/
+            ymodif = coordY.ToArray();
 
-            LineItem courbe = pane.AddCurve("Sinus", x, y, Color.Red);
+            for (int i = 0; i < ymodif.Length; i++) {
+                ymodif[i] = A * x[i] + B;
+            }
+
+            LineItem courbe = pane.AddCurve("Sinus", x, ymodif, Color.Red);
                 courbe.Symbol.Fill = new Fill(Color.Red);
 
             // On ajuste les axes en fonctions des étendues de X et Y
             /*Mettre notre échelle*/
-            pane.XAxis.Scale.Min = -10;
-            pane.XAxis.Scale.Max = 370;
-            pane.YAxis.Scale.Min = -0.1;
-            pane.YAxis.Scale.Max = 1.1;
+            pane.XAxis.Scale.Min = coordX.Min();
+            pane.XAxis.Scale.Max = coordX.Max();
+            pane.YAxis.Scale.Min = 0;
+            pane.YAxis.Scale.Max = 60;
 
             // On donne des titres aux axes et au graphique
             /*Mettre nos noms*/
-            pane.XAxis.Title.Text = "Angle (degrés)";
-            pane.YAxis.Title.Text = "Sinus";
-            pane.Title.Text = "Graphique de la fonction Y = SIN(X)";
+            pane.XAxis.Title.Text = "Volume (V) en cm3 ";
+            pane.YAxis.Title.Text = "Pression P (Kg/cm2)";
+            pane.Title.Text = "Graphique de la fonction Y = " + A.ToString() + ".X + " + B.ToString() + "\nCoefficient R = " + R.ToString();
 
             // On finalise le graphique
             /*Ouais ok, cool story*/
@@ -79,30 +93,8 @@ namespace WindowsFormsApplication2 {
             graph.Invalidate();             // Pour redessiner le graphique
         }
 
-        private void MagicTools() {
-            /*Ici je mets les bouts de code utiles avec le pourquoi*/
-
-            /*Ton readBinaryFile du TP2 afin de lire les données du fichier*/
-
-            /*Public void ReadBinaryFile(string filename, double[] data) {
-            using (BinaryReader b = new BinaryReader(File.Open(filename, FileMode.OpenOrCreate)))
-            {
-                int pos = 0;
-                int i = 0;
-                int length = (int)b.BaseStream.Length;
-                while (pos < length)
-                {
-                    double v = b.ReadDouble();
-                    data[i++] = v;
-                    pos = pos + sizeof(double);
-                }
-            }*/
-
-        }
-
         private void LoadFile_Click(object sender, EventArgs e) {
-            
-               
+
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -128,7 +120,59 @@ namespace WindowsFormsApplication2 {
             }
             x = coordX.ToArray();
             y = coordY.ToArray();
+            A = calcA(x, y);
+            B = calcB(x, y);
+            R = coeffCorrel(x, y);
             do_work();
         }
+
+        double calcB(double[] tabX, double[] tabY) {
+            double res = 0; ;
+            res = ((sumY * sumSquareX) - (sumX * sumXY)) / ((tabX.Length * sumSquareX) - (Math.Pow(sumX,2)));
+            return res;
+
+        }
+        double calcA (double[] tabX, double[] tabY)
+            {               
+            sumX = tabX.Sum();                
+            sumY = tabY.Sum();                
+            sumSquareX = 0;      
+            sumXY = 0;               
+                double res = 0;
+
+                foreach (double elem in tabX) {
+                    sumSquareX = sumSquareX + elem * elem;
+                }
+
+                for (int i = 0; i < tabX.Length; i++) {
+                    sumXY = sumXY + tabX[i] * tabY[i];
+                }
+
+                res = ((tabX.Length * sumXY) - (sumX * sumY)) / ((tabX.Length * sumSquareX) - (Math.Pow(sumX,2)));
+            return res;
+
+            }
+
+        double coeffCorrel(double[] tabX, double[] tabY) {
+            double res = 0;
+            double calc1 = 0;
+            double calc2 = 0;
+            double sumSquareY = 0;
+
+            foreach (double elem in tabY) {
+                    sumSquareY = sumSquareY + elem * elem;
+                }
+
+
+            calc1 = tabX.Length * sumSquareX - Math.Pow(sumX, 2);
+            calc2 = tabX.Length * sumSquareY - Math.Pow(sumY, 2);
+
+            res = ((tabX.Length * sumXY) - (sumX * sumY)) / (Math.Sqrt(calc1 * calc2));
+
+            return res;
+        }
     }
+
+
+
 }
